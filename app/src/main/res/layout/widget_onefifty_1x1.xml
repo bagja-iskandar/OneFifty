@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_widget_card"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TEMPO 150"
+        android:textColor="#8B9BB4"
+        android:textSize="9sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/widget_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="58%"
+        android:textColor="#FF6B4A"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/widget_subtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:text="87/150 min"
+        android:textColor="#8B9BB4"
+        android:textSize="9sp" />
+
+</LinearLayout>

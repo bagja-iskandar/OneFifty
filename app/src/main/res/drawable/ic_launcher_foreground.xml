@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Signature Primary Orange Ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,20 A34,34 0 1,1 53.9,20 Z"
+        android:strokeColor="#FF6B4A"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- Digit 1 -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M37,43 L37,65 M32,47 L37,43"
+        android:strokeColor="#FF6B4A"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Digit 5 -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M46,43 H56 M46,43 V52 H52 C56,52 57,54 57,58 C57,62 55,65 49,65 H45"
+        android:strokeColor="#FF6B4A"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Digit 0 -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M68,43 C73,43 74,46 74,54 C74,62 73,65 68,65 C63,65 62,62 61,54 C61,46 63,43 68,43 Z"
+        android:strokeColor="#FF6B4A"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+</vector>
