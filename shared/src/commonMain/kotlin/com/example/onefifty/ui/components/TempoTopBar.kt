@@ -36,11 +36,13 @@ import com.example.onefifty.util.DateUtils
 fun TempoTopBar(
     currentWeeklyMinutes: Int = 0,
     targetWeeklyMinutes: Int = 150,
+    subTitle: String = "SESSION",
     dateFormattedText: String = DateUtils.getCurrentWeekDateRangeString(),
     modifier: Modifier = Modifier
 ) {
     val progressFraction = (currentWeeklyMinutes.toFloat() / targetWeeklyMinutes.toFloat()).coerceIn(0f, 1f)
     val percentageInt = (progressFraction * 100).toInt()
+    val ringColor = if (currentWeeklyMinutes >= targetWeeklyMinutes) Color(0xFF4ADE80) else PrimaryOrange
 
     Row(
         modifier = modifier
@@ -67,7 +69,7 @@ fun TempoTopBar(
                         style = Stroke(width = strokeWidth)
                     )
                     drawArc(
-                        color = PrimaryOrange,
+                        color = ringColor,
                         startAngle = -90f,
                         sweepAngle = 360f * progressFraction,
                         useCenter = false,
@@ -77,7 +79,7 @@ fun TempoTopBar(
 
                 Text(
                     text = "$percentageInt%",
-                    color = PrimaryOrange,
+                    color = ringColor,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -94,7 +96,7 @@ fun TempoTopBar(
                     letterSpacing = 0.5.sp
                 )
                 Text(
-                    text = "SESSION",
+                    text = subTitle,
                     color = SecondarySlate,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -103,7 +105,7 @@ fun TempoTopBar(
             }
         }
 
-        // Real-Time Calendar Date Badge (e.g., "28 Sep – 4 Oct, 2025")
+        // Real-Time Calendar Date Badge (e.g., "28 Sep – 4 Oct, 2026")
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(20.dp))

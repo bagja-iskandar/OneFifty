@@ -49,10 +49,12 @@ fun SettingsScreen(
     weeklySessions: List<WorkoutSessionItem> = emptyList(),
     keepScreenOn: Boolean,
     onKeepScreenOnChanged: (Boolean) -> Unit,
+    onClearCurrentWeek: () -> Unit = {},
     onClearAllData: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showResetDialog by remember { mutableStateOf(false) }
+    var showResetWeekDialog by remember { mutableStateOf(false) }
+    var showResetAllDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -62,7 +64,8 @@ fun SettingsScreen(
     ) {
         TempoTopBar(
             currentWeeklyMinutes = currentWeeklyMinutes,
-            targetWeeklyMinutes = targetWeeklyMinutes
+            targetWeeklyMinutes = targetWeeklyMinutes,
+            subTitle = "SETTINGS"
         )
 
         Column(
@@ -214,11 +217,43 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 4. Danger Action: Clear All Local Data Button
+            // 4. Reset Current Week Only Button (Preserves past week archives)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { showResetDialog = true },
+                    .clickable { showResetWeekDialog = true },
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF282016)),
+                border = androidx.compose.foundation.BorderStroke(1.dp, PrimaryOrange.copy(alpha = 0.5f))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "🔄  Reset Progress Minggu Ini Saja",
+                        color = PrimaryOrange,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "Mengosongkan log minggu aktif tanpa menghapus arsip minggu lalu",
+                        color = SecondarySlate,
+                        fontSize = 11.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // 5. Danger Action: Clear All Local Data & Archives Button
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showResetAllDialog = true },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF2C1919)),
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFEF4444).copy(alpha = 0.5f))
@@ -231,7 +266,7 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "🗑️  Clear All Local Data (Reset to 0)",
+                        text = "🗑️  Clear All Data & Archives (Reset All)",
                         color = Color(0xFFEF4444),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
@@ -241,7 +276,7 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 5. About App Info Card
+            // 6. About App Info Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -270,32 +305,62 @@ fun SettingsScreen(
         }
     }
 
-    // Clear Data Confirmation Dialog
-    if (showResetDialog) {
-        AlertDialog(
-            onDismissRequest = { showResetDialog = false },
-            containerColor = NeutralDark,
-            title = {
-                Text(text = "Clear All Local Data?", color = Color.White, fontWeight = FontWeight.Bold)
+    if (showResetWeekDialog) {
+        ConfirmDestructiveDialog(
+            title = "Reset Progress Minggu Ini?",
+            message = "Semua log olahraga di minggu berjalan akan dihapus ke 0 menit, sedangkan arsip minggu-minggu sebelumnya tetap tersimpan aman.",
+            confirmLabel = "Ya, Reset Minggu Ini",
+            confirmColor = PrimaryOrange,
+            onConfirm = {
+                onClearCurrentWeek()
+                showResetWeekDialog = false
             },
-            text = {
-                Text(text = "This will permanently delete all local workout history and reset your current weekly progress to 0 minutes.", color = SecondarySlate)
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onClearAllData()
-                        showResetDialog = false
-                    }
-                ) {
-                    Text(text = "Yes, Reset to 0", color = Color(0xFFEF4444), fontWeight = FontWeight.Bold)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showResetDialog = false }) {
-                    Text(text = "Cancel", color = SecondarySlate)
-                }
-            }
+            onDismiss = { showResetWeekDialog = false }
         )
     }
+
+    if (showResetAllDialog) {
+        ConfirmDestructiveDialog(
+            title = "Clear All Data & Archives?",
+            message = "Ini akan menghapus permanen seluruh riwayat minggu lalu sekaligus mereset progress minggu ini ke 0 menit.",
+            confirmLabel = "Ya, Hapus Semua",
+            confirmColor = Color(0xFFEF4444),
+            onConfirm = {
+                onClearAllData()
+                showResetAllDialog = false
+            },
+            onDismiss = { showResetAllDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun ConfirmDestructiveDialog(
+    title: String,
+    message: String,
+    confirmLabel: String,
+    confirmColor: Color,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = NeutralDark,
+        title = {
+            Text(text = title, color = Color.White, fontWeight = FontWeight.Bold)
+        },
+        text = {
+            Text(text = message, color = SecondarySlate)
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(text = confirmLabel, color = confirmColor, fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = "Batal", color = SecondarySlate)
+            }
+        }
+    )
 }

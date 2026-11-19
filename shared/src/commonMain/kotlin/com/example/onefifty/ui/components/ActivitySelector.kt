@@ -27,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.onefifty.ui.model.ActivityType
-import com.example.onefifty.ui.theme.PrimaryOrange
 import com.example.onefifty.ui.theme.SecondarySlate
 import com.example.onefifty.ui.theme.SurfaceCardBorder
 import com.example.onefifty.ui.theme.SurfaceChip
@@ -99,16 +98,16 @@ private fun ActivitySquareTile(
     modifier: Modifier = Modifier
 ) {
     val tileScale by animateFloatAsState(
-        targetValue = if (isSelected) 1.05f else 1.0f,
+        targetValue = if (isSelected) 1.06f else 1.0f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
+            stiffness = Spring.StiffnessMediumLow
         ),
         label = "tileSpringScale"
     )
 
-    val backgroundColor = if (isSelected) PrimaryOrange else SurfaceChip
-    val borderStrokeColor = if (isSelected) PrimaryOrange else SurfaceCardBorder
+    val backgroundColor = if (isSelected) activity.themeColor else SurfaceChip
+    val borderStrokeColor = if (isSelected) activity.themeColor else SurfaceCardBorder
     val textColor = if (isSelected) Color.White else SecondarySlate
 
     Box(

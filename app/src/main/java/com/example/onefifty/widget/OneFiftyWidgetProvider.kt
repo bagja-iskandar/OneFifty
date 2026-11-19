@@ -9,6 +9,7 @@ import android.content.Intent
 import android.widget.RemoteViews
 import com.example.onefifty.MainActivity
 import com.example.onefifty.R
+import org.json.JSONArray
 
 class OneFiftyWidgetProvider : AppWidgetProvider() {
 
@@ -17,8 +18,29 @@ class OneFiftyWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
+        val currentMinutes = loadCurrentMinutesFromPrefs(context)
         for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId, 0, 150)
+            updateAppWidget(context, appWidgetManager, appWidgetId, currentMinutes, 150)
+        }
+    }
+
+    private fun loadCurrentMinutesFromPrefs(context: Context): Int {
+        return try {
+            val prefs = context.getSharedPreferences("tempo150_local_prefs", Context.MODE_PRIVATE)
+            val jsonStr = prefs.getString("key_weekly_sessions", null) ?: return 0
+            val array = JSONArray(jsonStr)
+            var totalSecs = 0
+            for (i in 0 until array.length()) {
+                val obj = array.getJSONObject(i)
+                totalSecs += if (obj.has("durationSeconds")) {
+                    obj.getInt("durationSeconds")
+                } else {
+                    obj.optInt("durationMinutes", 0) * 60
+                }
+            }
+            totalSecs / 60
+        } catch (e: Exception) {
+            0
         }
     }
 
@@ -28,7 +50,7 @@ class OneFiftyWidgetProvider : AppWidgetProvider() {
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int,
             currentMinutes: Int,
-            targetMinutes: Int
+            targetMinutes: Int = 150
         ) {
             val percentage = if (targetMinutes > 0) (currentMinutes * 100) / targetMinutes else 0
             val views = RemoteViews(context.packageName, R.layout.widget_onefifty_1x1)
